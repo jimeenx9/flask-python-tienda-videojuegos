@@ -14,22 +14,14 @@
 
 ## 📸 CAPTURAS DEL PROYECTO
 
-> Las capturas del proyecto se almacenan en la carpeta:
-> 
+### 🏠 Vista principal
+![Vista principal](./aplicacion/static/capturas/inicio.png)
 
-```
-aplicacion/static/capturas/
+### 🔐 Login
+![Login](./aplicacion/static/capturas/login.png)
 
-```
-
-Ejemplo de uso en README / Notion:
-
-```markdown
-![Vista principal](aplicacion/static/capturas/inicio.png)
-![Login](aplicacion/static/capturas/login.png)
-![Carrito](aplicacion/static/capturas/carrito.png)
-
-```
+### 🛒 Carrito
+![Carrito](./aplicacion/static/capturas/carrito.png)
 
 
 ---
