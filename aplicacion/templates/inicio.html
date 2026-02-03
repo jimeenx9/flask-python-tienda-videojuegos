@@ -1,0 +1,107 @@
+{% extends "base2.html" %}
+
+{% block title %}Tienda{% endblock %}
+
+{% block contenido %}
+<div class="container">
+    <div class="row">
+
+        <!-- CATEGORÍAS -->
+        <div class="col-md-2">
+            <h3>Categorías</h3>
+
+            <div class="list-group">
+                {% for cat in categorias %}
+                    <a class="list-group-item list-group-item-action
+                        {% if categoria and categoria.id == cat.id %}active{% endif %}"
+                       href="{{ url_for('inicio', id=cat.id) }}">
+                        {{ cat.nombre }}
+                    </a>
+                {% endfor %}
+            </div>
+
+            {% if current_user.is_authenticated and current_user.is_admin() %}
+                <br>
+                <a class="btn btn-primary w-100"
+                   href="{{ url_for('articulos_new') }}">
+                    Nuevo videojuego
+                </a>
+
+                <br><br>
+
+                <a class="btn btn-secondary w-100"
+                   href="{{ url_for('categorias_new') }}">
+                    Nueva categoría
+                </a>
+            {% endif %}
+        </div>
+
+        <!-- ARTÍCULOS -->
+        <div class="col-md-10">
+            <h3>
+                Nuestros videojuegos
+                {% if categoria %}
+                    (Categoría: {{ categoria.nombre }})
+                {% endif %}
+            </h3>
+
+            <table class="table table-bordered">
+                <tr>
+                    <th></th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>PVP</th>
+
+                    {% if current_user.is_authenticated %}
+                        <th>Comprar</th>
+                    {% endif %}
+
+                    {% if current_user.is_authenticated and current_user.is_admin() %}
+                        <th>Modificar</th>
+                        <th>Borrar</th>
+                    {% endif %}
+                </tr>
+
+                {% for art in articulos %}
+                <tr>
+                    <td>
+                        {% if art.imagen %}
+                            <img src="{{ url_for('static', filename='img/' ~ art.imagen) }}" width="80">
+                        {% else %}
+                            <img src="{{ url_for('static', filename='img/not-found.png') }}" width="80">
+                        {% endif %}
+                    </td>
+
+                    <td>{{ art.nombre }}</td>
+                    <td>{{ art.descripcion }}</td>
+                    <td>{{ art.precio_final() }} €</td>
+
+                    {% if current_user.is_authenticated %}
+                    <td>
+                        <a href="{{ url_for('carrito_add', id=art.id) }}" class="btn btn-sm btn-success">
+                            <i class="bi bi-cart"></i> Comprar
+                        </a>
+                    </td>
+                    {% endif %}
+
+
+                    {% if current_user.is_authenticated and current_user.is_admin() %}
+                        <td>
+                            <a href="{{ url_for('articulos_edit', id=art.id) }}">
+                                <i class="bi bi-pencil"></i> Modificar
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('articulos_delete', id=art.id) }}">
+                                <i class="bi bi-trash"></i> Borrar
+                            </a>
+                        </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

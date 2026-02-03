@@ -1,0 +1,68 @@
+{% extends "base2.html" %}
+
+{% block title %}Usuarios{% endblock %}
+
+{% block contenido %}
+<div class="container">
+    <div class="col-md-2"></div>
+
+    <div class="col-md-6">
+        {% if not perfil %}
+            <h3>Registro de usuario</h3>
+        {% else %}
+            <h3>Perfil de {{ current_user.username }}</h3>
+        {% endif %}
+
+        {% for field, errors in form.errors.items() %}
+            <div class="alert alert-danger">
+                {{ form[field].label }}: {{ ', '.join(errors) }}
+            </div>
+        {% endfor %}
+
+        <form class="form-horizontal" method="post">
+            {{ form.csrf_token }}
+
+            <!-- USERNAME -->
+            <div class="form-group">
+                {% if not perfil %}
+                    {{ form.username.label() }}
+                    {{ form.username(size=100, class="form-control") }}
+                {% else %}
+                    {{ form.username.label() }}
+                    {{ form.username(readonly="readonly", size=100, class="form-control") }}
+                {% endif %}
+            </div>
+            <br>
+
+            <!-- PASSWORD -->
+            <div class="form-group">
+                {% if not perfil %}
+                    {{ form.password.label() }}
+                    {{ form.password(size=100, class="form-control") }}
+                {% else %}
+                    <a href="{{ url_for('changepassword', username=current_user.username) }}">
+                        Cambiar contraseña
+                    </a>
+                {% endif %}
+            </div>
+            <br>
+
+            <!-- NOMBRE -->
+            <div class="form-group">
+                {{ form.nombre.label() }}
+                {{ form.nombre(size=100, class="form-control") }}
+            </div>
+            <br>
+
+            <!-- EMAIL -->
+            <div class="form-group">
+                {{ form.email.label() }}
+                {{ form.email(size=100, class="form-control") }}
+            </div>
+            <br>
+
+            {{ form.submit(class="btn btn-lg btn-primary btn-block") }}
+        </form>
+    </div>
+</div>
+{% endblock %}

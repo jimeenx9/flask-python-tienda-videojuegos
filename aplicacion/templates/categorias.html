@@ -1,0 +1,39 @@
+{% extends "base2.html" %}
+
+{% block title %}Categorías{% endblock %}
+
+{% block contenido %}
+<div class="container">
+    <h3>Categorías</h3>
+
+    <table class="table table-bordered">
+        <tr>
+            <th>Nombre</th>
+
+            {% if current_user.is_authenticated and current_user.is_admin() %}
+                <th>Modificar</th>
+                <th>Borrar</th>
+            {% endif %}
+        </tr>
+
+        {% for cat in categorias %}
+        <tr>
+            <td>{{ cat.nombre }}</td>
+
+            {% if current_user.is_authenticated and current_user.is_admin() %}
+                <td>
+                    <a href="{{ url_for('categorias_edit', id=cat.id) }}">
+                        <i class="bi bi-pencil"></i> Modificar
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ url_for('categorias_delete', id=cat.id) }}">
+                        <i class="bi bi-trash"></i> Borrar
+                    </a>
+                </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

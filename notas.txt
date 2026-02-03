@@ -1,0 +1,31 @@
+cat aplicacion/config.py aplicacion/models.py aplicacion/app.py manage.py
+
+http://127.0.0.1:5000/
+
+http://127.0.0.1:5000/categoria/1
+
+http://127.0.0.1:5000/categorias
+
+tree -a -I 'venv|__pycache__' && echo "----- ARCHIVOS PYTHON -----" && cat aplicacion/config.py aplicacion/models.py aplicacion/app.py manage.py
+
+
+👉 http://127.0.0.1:5000/
+
+👉 http://127.0.0.1:5000/categoria/1
+
+👉 http://127.0.0.1:5000/categorias
+
+👉 http://127.0.0.1:5000/categoria/999
+
+
+http://localhost:5000/articulos/new
+
+flask --app manage.py run --debug
+
+http://127.0.0.1:5000/login
+
+flask --app manage.py drop_tables
+flask --app manage.py create_tables
+flask --app manage.py add_data_tables
+flask --app manage.py create_admin
+flask --app manage.py run --host=0.0.0.0 --port=5000 --debug
