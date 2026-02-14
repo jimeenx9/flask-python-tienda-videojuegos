@@ -8,33 +8,39 @@
 
 👤 **Autor:** Alberto Jiménez Rodríguez
 
-📅 **Estado:** ✅ Funcional – Login, permisos, carrito con cookies
+📅 **Estado:** ✅ Aplicación completa con proceso de compra funcional
 
 ---
 
 ## 📸 CAPTURAS DEL PROYECTO
 
 ### 🏠 Vista principal
+
 ![Vista principal](./aplicacion/static/capturas/inicio.png)
 
 ### 🔐 Login
+
 ![Login](./aplicacion/static/capturas/login.png)
 
-### 🛒 Carrito
-![Carrito](./aplicacion/static/capturas/carrito.png)
+### 🔐 Registro
 
+![Registro](./aplicacion/static/capturas/registro.png)
+
+### 🛒 Carrito
+
+![Carrito](./aplicacion/static/capturas/carrito.png)
 
 ---
 
 ## 🧠 Objetivo del proyecto
 
-Desarrollar una **aplicación web completa con Flask** que implemente:
+Desarrollar una **aplicación web completa con Flask** simulando una tienda online que implemente:
 
-- Gestión de usuarios (registro, login, logout)
-- Control de acceso por roles (admin / usuario)
-- Persistencia de datos con ORM
-- Gestión de sesiones y cookies
-- Carrito de la compra funcional
+- Gestión de usuarios
+- Control de permisos
+- Persistencia de datos
+- Gestión de estado (sesión + cookies)
+- Proceso real de compra
 - Renderizado dinámico con plantillas
 
 ---
@@ -43,17 +49,12 @@ Desarrollar una **aplicación web completa con Flask** que implemente:
 
 ### 🐧 WSL (Windows Subsystem for Linux)
 
-El proyecto se ha desarrollado íntegramente en **WSL**, lo que permite:
+El proyecto se ha desarrollado íntegramente en **WSL**, permitiendo trabajar en un entorno Linux real.
 
-- Entorno Linux real
-- Uso directo de Python, pip y Flask
-- Mejor organización de rutas y permisos
-
-📌 **Ruta del proyecto:**
+📌 Ruta del proyecto:
 
 ```bash
-./***/Proyectos/ProyectoFlaskSQL
-
+/home/usuario/Proyectos/ProyectoFlaskSQL
 ```
 
 ---
@@ -63,42 +64,34 @@ El proyecto se ha desarrollado íntegramente en **WSL**, lo que permite:
 ### 1️⃣ Crear entorno virtual
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
-
+python3 -m venv venvsource venv/bin/activate
 ```
-
----
 
 ### 2️⃣ Instalar dependencias
 
 ```bash
 pip install -r requirements.txt
-
 ```
 
----
+### 3️⃣ Inicializar base de datos
 
-### 3️⃣ Lanzar la aplicación
+```bash
+flask --app manage.py drop_tables
+flask --app manage.py create_tables
+flask --app manage.py add_data_tables
+flask --app manage.py create_admin
+```
 
-Desde la raíz del proyecto:
+### 4️⃣ Ejecutar aplicación
 
 ```bash
 flask --app manage.py run --debug
 ```
 
-O alternativamente:
-
-```bash
-python aplicacion/app.py
-
-```
-
-📍 **URL local:**
+📍 URL:
 
 ```
 http://127.0.0.1:5000
-
 ```
 
 ---
@@ -109,132 +102,127 @@ http://127.0.0.1:5000
 ProyectoFlaskSQL/
 │
 ├── aplicacion/
-│   ├── app.py# Rutas y controladores
-│   ├── config.py# Configuración Flask
-│   ├── models.py# Modelos ORM
-│   ├── forms.py# Formularios Flask-WTF
-│   ├── dbase.db# Base de datos SQLite
+│   ├── app.py
+│   ├── models.py
+│   ├── forms.py
+│   ├── config.py
+│   ├── dbase.db
 │   │
 │   ├──static/
-│   │   ├── img/# Imágenes de artículos
-│   │   └── capturas/# Capturas del proyecto
+│   │   ├── img/
+│   │   └── capturas/
 │   │
 │   └── templates/
-│       ├──base.html
+│       ├── base.html
 │       ├── base2.html
 │       ├── inicio.html
-│       ├── login.html
+│       ├── carrito.html
 │       ├── carrito_add.html
-│       ├── categorias*.html
-│       ├── articulos*.html
-│       └── usuarios_new.html
+│       ├── pedido.html
+│       └── login / usuarios / categorias / articulos
 │
-├── venv/# Entorno virtual
-├── requirements.txt
 ├── manage.py
+├── requirements.txt
 └── README.md
-
 ```
 
 ---
 
 ## 🧱 Modelo de datos (ORM)
 
-### 📦 Entidades principales
+### Entidades
 
-- 👤 **Usuario**
-- 🏷 **Categoria**
-- 🎮 **Articulo**
+- 👤 Usuario
+- 🏷 Categoria
+- 🎮 Articulo
 
-### 🔗 Relaciones
+### Relaciones
 
-- Una **Categoría** tiene muchos **Artículos**
-- Un **Usuario** puede tener múltiples artículos en su carrito (cookies)
-
----
-
-## 🔐 Autenticación y autorización
-
-### ✔️ Login / Logout
-
-- Implementado con **Flask-Login**
-- Contraseñas hasheadas
-- Redirección segura con `next`
-
-### ✔️ Control de acceso
-
-- Rutas protegidas con `@login_required`
-- Permisos de administrador
-- Control en backend y frontend (plantillas)
+- Una categoría tiene muchos artículos
+- El carrito pertenece a un usuario (cookie por id)
 
 ---
 
-## 🧾 Formularios (Flask-WTF)
+## 🔐 Autenticación y permisos
 
-Formularios implementados:
+Implementado con **Flask-Login**
 
-- `LoginForm`
-- `formUsuario`
-- `formArticulo`
-- `formCategoria`
-- `formChangePassword`
-- `formCarrito`
-
-✔️ Validaciones
-
-✔️ Mensajes de error
-
-✔️ CSRF activo
+- Login / Logout
+- Protección de rutas
+- Roles admin / usuario
+- Redirecciones seguras
+- Hash de contraseñas
 
 ---
 
-## 🛒 Carrito de la compra (Cookies + JSON)
+## 🧾 Formularios
 
-- Cada usuario tiene una **cookie asociada a su ID**
-- Los artículos se almacenan en formato **JSON**
-- Estructura de la cookie:
+- Registro
+- Login
+- Crear artículos
+- Crear categorías
+- Añadir al carrito
+- Cambio de contraseña
+
+✔ Validaciones
+
+✔ CSRF
+
+✔ Mensajes de error
+
+---
+
+## 🛒 Sistema de compra completo
+
+El carrito se almacena en una **cookie JSON por usuario**
 
 ```json
-[
-{
-"id":1,
-"cantidad":2
-},
-{
-"id":2,
-"cantidad":1
-}
-]
-
+[{"id":1,"cantidad":2},{"id":4,"cantidad":1}]
 ```
 
-✔️ Añadir artículos
+### Funcionalidades
 
-✔️ Actualizar cantidad
+✔ Añadir productos
 
-✔️ Comprobación de stock
+✔ Ver carrito
+
+✔ Eliminar producto del carrito
+
+✔ Calcular total automáticamente
+
+✔ Finalizar compra
+
+✔ Descontar stock en base de datos
+
+✔ Vaciar carrito automáticamente
+
+✔ Confirmación de pedido
+
+---
+
+## 📦 Flujo de compra
+
+1. Usuario añade producto
+2. Se guarda en cookie
+3. Usuario entra al carrito
+4. Puede eliminar artículos
+5. Finaliza compra
+6. Se descuenta stock en BD
+7. Se borra cookie
+8. Se muestra confirmación
 
 ---
 
 ## 🧠 Plantillas (Jinja2)
 
-Uso de:
+Uso completo de:
 
-- Herencia (`extends`)
-- Bloques (`block`)
-- Variables
+- Herencia
 - Condicionales
 - Bucles
-- Control de permisos en vista
-
-Ejemplo:
-
-```
-{% if current_user.is_authenticated %}
-    <a href="{{ url_for('carrito_add', id=art.id) }}">Comprar</a>
-{% endif %}
-
-```
+- Variables
+- Control por permisos
+- Componentes reutilizables
 
 ---
 
@@ -242,44 +230,47 @@ Ejemplo:
 
 - `abort(404)`
 - `get_or_404`
-- Página personalizada de error
-- Redirecciones controladas
+- Página personalizada
+- Control de acceso
 
 ---
 
-## 🏁 Funcionalidades implementadas (Checklist)
+## 🏁 Funcionalidades implementadas
 
-✅ Rutas estáticas
+✔ Rutas estáticas
 
-✅ Rutas dinámicas
+✔ Rutas dinámicas
 
-✅ GET / POST
+✔ GET / POST
 
-✅ Formularios HTML
+✔ Formularios
 
-✅ Subida de archivos
+✔ Subida de archivos
 
-✅ ORM con SQLAlchemy
+✔ ORM
 
-✅ Login / Logout
+✔ Login / Logout
 
-✅ Control de permisos
+✔ Permisos
 
-✅ Sesiones
+✔ Sesiones
 
-✅ Cookies
+✔ Cookies
 
-✅ Carrito de la compra
+✔ Carrito persistente
+
+✔ Compra real con actualización de stock
 
 ---
 
 ## 🧾 Conclusión
 
-Este proyecto representa una **aplicación Flask completa**, integrando:
+Este proyecto implementa una **aplicación web completa tipo e-commerce básico**, integrando:
 
 - Backend real
-- Seguridad básica
-- Persistencia de datos
-- Gestión de estado del usuario
-- Arquitectura limpia y entendible
+- Seguridad
+- Persistencia
+- Estado del usuario
+- Flujo de compra funcional
 
+Simula el comportamiento de una tienda online real con gestión de inventario.
