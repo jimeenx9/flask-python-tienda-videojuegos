@@ -8,6 +8,8 @@
 
 👤 **Autor:** Alberto Jiménez Rodríguez
 
+🧑‍🏫 **Profesor:** Gutiérrez Martínez, Francisco José
+
 📅 **Estado:** ✅ Aplicación completa con proceso de compra funcional
 
 ---
