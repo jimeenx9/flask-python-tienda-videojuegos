@@ -1,0 +1,18 @@
+{% extends "base2.html" %}
+{% block title %}Pedido realizado{% endblock %}
+
+{% block contenido %}
+<div class="container text-center">
+
+    <h2 class="mt-4">Gracias por tu compra</h2>
+    <h4>Total pagado: {{ total }} €</h4>
+
+    <br>
+
+    <a class="btn btn-success" href="{{ url_for('fin_pedido') }}">
+        Volver a Tienda
+    </a>
+
+
+</div>
+{% endblock %}

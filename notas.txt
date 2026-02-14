@@ -20,6 +20,7 @@ tree -a -I 'venv|__pycache__' && echo "----- ARCHIVOS PYTHON -----" && cat aplic
 
 http://localhost:5000/articulos/new
 
+source venv/bin/activate
 flask --app manage.py run --debug
 
 http://127.0.0.1:5000/login

@@ -1,0 +1,50 @@
+{% extends "base2.html" %}
+{% block title %}Carrito{% endblock %}
+
+{% block contenido %}
+<div class="container">
+
+    <h3>Carrito de la compra</h3>
+    <br>
+
+{% if total > 0 %}
+<table class="table table-bordered">
+    <tr>
+        <th>Nombre</th>
+        <th>Cantidad</th>
+        <th>Precio unidad</th>
+        <th>Total</th>
+        <th></th>
+    </tr>
+
+    {% for art, cantidad in articulos %}
+    <tr>
+        <td>{{ art.nombre }}</td>
+        <td>{{ cantidad }}</td>
+        <td>{{ art.precio_final() }} €</td>
+        <td>{{ art.precio_final() * cantidad }} €</td>
+        <td>
+            <a class="btn btn-danger btn-sm"
+            href="{{ url_for('carrito_delete', id=art.id) }}">
+                Borrar
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+<h4 class="text-end">TOTAL: {{ total }} €</h4>
+
+<div class="text-end mt-3">
+    <a class="btn btn-success" href="{{ url_for('pedido') }}">
+        Finalizar compra
+    </a>
+</div>
+
+    {% else %}
+        <h4>No hay artículos en el carrito</h4>
+    {% endif %}
+
+</div>
+{% endblock %}

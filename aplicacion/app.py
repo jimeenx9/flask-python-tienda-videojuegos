@@ -339,11 +339,117 @@ def carrito_add(id):
                 })
 
             resp = make_response(redirect(url_for("inicio")))
-            resp.set_cookie(str(current_user.id), json.dumps(datos))
+            resp.set_cookie(str(current_user.id), json.dumps(datos), max_age=60*60*24*30)
             return resp
 
         form.cantidad.errors.append("No hay stock suficiente.")
 
     return render_template("carrito_add.html", form=form, art=art)
+
+
+@app.route("/carrito")
+@login_required
+def carrito():
+
+    # 1) Leer cookie del usuario
+    try:
+        datos = json.loads(request.cookies.get(str(current_user.id)))
+    except:
+        datos = []
+
+    # 2) Convertir ids - objetos reales
+    articulos = []
+    total = 0
+
+    for item in datos:
+        art = Articulo.query.get(item["id"])
+        if art:
+            cantidad = item["cantidad"]
+            articulos.append((art, cantidad))
+            total += art.precio_final() * cantidad
+
+    # 3) Enviar a plantilla
+    return render_template("carrito.html", articulos=articulos, total=total)
+
+# =========================
+# CONTADOR GLOBAL CARRITO
+# =========================
+@app.context_processor
+def contar_carrito():
+
+    if not current_user.is_authenticated:
+        return dict(num_articulos=0)
+
+    try:
+        datos = json.loads(request.cookies.get(str(current_user.id)))
+        return dict(num_articulos=len(datos))
+    except:
+        return dict(num_articulos=0)
+
+@app.route("/carrito_delete/<int:id>")
+@login_required
+def carrito_delete(id):
+
+    try:
+        datos = json.loads(request.cookies.get(str(current_user.id)))
+    except:
+        datos = []
+
+    nuevos = []
+
+    for item in datos:
+        if item["id"] != id:
+            nuevos.append(item)
+
+    resp = make_response(redirect(url_for("carrito")))
+    resp.set_cookie(str(current_user.id), json.dumps(nuevos), max_age=60*60*24*30)
+    return resp
+
+
+@app.route("/pedido")
+@login_required
+def pedido():
+
+    try:
+        datos = json.loads(request.cookies.get(str(current_user.id)))
+    except:
+        datos = []
+
+    total = 0
+
+    for item in datos:
+        art = Articulo.query.get(item["id"])
+        if art:
+            total += art.precio_final() * item["cantidad"]
+
+    return render_template("pedido.html", total=total)
+
+
+@app.route("/fin_pedido")
+@login_required
+def fin_pedido():
+
+    try:
+        datos = json.loads(request.cookies.get(str(current_user.id)))
+    except:
+        datos = []
+
+    for item in datos:
+        art = Articulo.query.get(item["id"])
+        if art:
+            art.stock -= item["cantidad"]
+
+    db.session.commit()
+
+    resp = make_response(redirect(url_for("inicio")))
+    resp.set_cookie(str(current_user.id), "", expires=0)
+
+    return resp
+
+
+
+
+
+
 
 
